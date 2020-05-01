@@ -45,14 +45,11 @@ ChatBot::~ChatBot()
 //// STUDENT CODE
 ////
 //copy constructor
-//performs deep copy
 ChatBot::ChatBot(const ChatBot &bot) {
-    _image = new wxBitmap();//arguments?
-    _chatLogic = new ChatLogic();
-    _rootNode = new GraphNode(0); //placeholder id
-    *_image = *bot._image;
-    *_chatLogic = *bot._chatLogic;
-    *_rootNode = *bot._rootNode;
+    _image = new wxBitmap(*bot._image);
+    _chatLogic = bot._chatLogic;
+    _rootNode = bot._rootNode; 
+
     std::cout << "chatbot Copy constructor called" << std::endl;
 }
 //copy assignment 
@@ -61,14 +58,9 @@ ChatBot& ChatBot::operator = (const ChatBot &bot) {
         return *this;
     }
     delete _image;
-    delete _chatLogic;
-    delete _rootNode;
-    _image = new wxBitmap();//arguments?
-    _chatLogic = new ChatLogic();
-    _rootNode = new GraphNode(0);
-    *_image = *bot._image;
-    *_chatLogic = *bot._chatLogic;
-    *_rootNode = *bot._rootNode;
+    _image = new wxBitmap(*bot._image);
+    _chatLogic = bot._chatLogic;
+    _rootNode = bot._rootNode; 
     std::cout << "chatbot copy assignment called" << std::endl;
     return *this;
 }
@@ -90,8 +82,6 @@ ChatBot& ChatBot::operator = (ChatBot &&bot) {
         return *this;
     }
     delete _image;
-    delete _chatLogic;
-    delete _rootNode;
     _image = bot._image;
     _chatLogic = bot._chatLogic;
     _rootNode = bot._rootNode;
