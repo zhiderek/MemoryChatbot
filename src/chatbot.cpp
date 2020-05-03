@@ -49,7 +49,6 @@ ChatBot::ChatBot(const ChatBot &bot) {
     _image = new wxBitmap(*bot._image);
     _chatLogic = bot._chatLogic;
     _rootNode = bot._rootNode; 
-
     std::cout << "chatbot Copy constructor called" << std::endl;
 }
 //copy assignment 
@@ -69,6 +68,7 @@ ChatBot& ChatBot::operator = (const ChatBot &bot) {
 ChatBot::ChatBot(ChatBot &&bot) {
     _image = bot._image;
     _chatLogic = bot._chatLogic;
+    _chatLogic->SetChatbotHandle(this);
     _rootNode = bot._rootNode;
     bot._image = nullptr;
     bot._chatLogic = nullptr;
@@ -84,6 +84,7 @@ ChatBot& ChatBot::operator = (ChatBot &&bot) {
     delete _image;
     _image = bot._image;
     _chatLogic = bot._chatLogic;
+    _chatLogic->SetChatbotHandle(this);
     _rootNode = bot._rootNode;
     bot._image = nullptr;
     bot._chatLogic = nullptr;
@@ -99,7 +100,6 @@ void ChatBot::ReceiveMessageFromUser(std::string message)
     // loop over all edges and keywords and compute Levenshtein distance to query
     typedef std::pair<GraphEdge *, int> EdgeDist;
     std::vector<EdgeDist> levDists; // format is <ptr,levDist>
-
     for (size_t i = 0; i < _currentNode->GetNumberOfChildEdges(); ++i)
     {
         GraphEdge *edge = _currentNode->GetChildEdgeAtIndex(i);
@@ -109,7 +109,6 @@ void ChatBot::ReceiveMessageFromUser(std::string message)
             levDists.push_back(ed);
         }
     }
-
     // select best fitting edge to proceed along
     GraphNode *newNode;
     if (levDists.size() > 0)
@@ -123,7 +122,6 @@ void ChatBot::ReceiveMessageFromUser(std::string message)
         // go back to root node
         newNode = _rootNode;
     }
-
     // tell current node to move chatbot to new node
     _currentNode->MoveChatbotToNewNode(newNode);
 }
